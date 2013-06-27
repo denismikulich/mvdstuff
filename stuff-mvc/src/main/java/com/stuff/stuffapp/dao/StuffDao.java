@@ -2,7 +2,6 @@ package com.stuff.stuffapp.dao;
 
 import java.util.List;
 
-import com.stuff.stuffapp.data.StuffType;
 import com.stuff.stuffapp.domain.Stuff;
 
 public interface StuffDao {
@@ -16,6 +15,6 @@ public interface StuffDao {
 	public Stuff retriveStuff(Long id);
 
 	public Stuff findStuff(String regNumber, int year);
-	
-	public Stuff findStuff(String regNumber, StuffType type, int year);
+
+	public Stuff findStuff(String regNumber, int type, int year);
 }

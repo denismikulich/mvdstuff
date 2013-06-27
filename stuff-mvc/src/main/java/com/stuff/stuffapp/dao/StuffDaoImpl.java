@@ -94,7 +94,7 @@ public class StuffDaoImpl implements StuffDao {
 
 	@Override
 	@Transactional
-	public Stuff findStuff(String regNumber, StuffType type, int year) {
+	public Stuff findStuff(String regNumber, int type, int year) {
 		Session session = sessionFactory.getCurrentSession();
 		List<Stuff> stuffs = null;
 		try {
@@ -103,7 +103,7 @@ public class StuffDaoImpl implements StuffDao {
 							"and year = :regY");
 			q.setString("regN", regNumber);
 			q.setInteger("regY", year);
-			q.setInteger("type", type.getIntValue());
+			q.setInteger("type", type);
 			stuffs = q.list();
 			session.flush();
 		} catch (HibernateException ex) {

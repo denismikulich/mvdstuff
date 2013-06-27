@@ -26,7 +26,7 @@ public class PrepareSendStuffController extends BaseController {
 	
 	@Override
 	public String getPageHeaderHtml() {
-		return "Send Stuff";
+		return "sendstuffpage.header.text";
 	}
 	
 	@RequestMapping(value = "/main/sendstuff", method = RequestMethod.GET)
@@ -37,7 +37,7 @@ public class PrepareSendStuffController extends BaseController {
 		isBack = false;
 		ModelAndView model = new ModelAndView("sendstuff");
 		model.addObject("sendBean", pageModel.getPrepareBean());
-		model.addObject("stuffNumbers", pageModel.getStuffNumbers());
+		model.addObject("stuffNumbers", null);
 		return super.baseHandle(model);
 	}
 	
@@ -72,7 +72,7 @@ public class PrepareSendStuffController extends BaseController {
 	public ModelAndView handleSubmitSending() {
 		ModelAndView model = new ModelAndView("submitsending");
 		model.addObject("sendBean", pageModel.getPrepareBean());
-		model.addObject("stuffNumbers", pageModel.getStuffNumbers());
+		model.addObject("stuffNumbers", null);
 		return super.baseHandle(model);
 	}
 	

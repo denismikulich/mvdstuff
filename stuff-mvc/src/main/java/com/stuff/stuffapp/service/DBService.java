@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.stuff.stuffapp.dao.StuffDao;
 import com.stuff.stuffapp.dao.StuffFlowDao;
-import com.stuff.stuffapp.data.FlowData;
+import com.stuff.stuffapp.data.FlowBO;
+import com.stuff.stuffapp.data.StuffBO;
 import com.stuff.stuffapp.data.StuffType;
+import com.stuff.stuffapp.data.UserBO;
 import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.domain.StuffFlow;
 import com.stuff.stuffapp.domain.User;
@@ -26,12 +28,20 @@ public class DBService {
 	StuffDao stuffDao;
 	@Autowired
 	StuffFlowDao flowDao;
-	
+
 	private static Logger log = Logger.getLogger(DBService.class.getName());
 
 	public Stuff getStuff(StuffSearchCriteria criteria) {
-		return stuffDao.findStuff(criteria.getStuffNumber(), StuffType.valueOf(criteria.getType()),
-				criteria.getStuffsYear());
+		return getStuff(criteria.getStuffNumber(), criteria.getType(), criteria.getStuffsYear());
+	}
+
+	private Stuff getStuff(String regNo, int type, int year) {
+		return stuffDao.findStuff(regNo, type, year);
+	}
+	
+	public Boolean isStuffExist(StuffBO stuff) {
+		Stuff result = stuffDao.findStuff(stuff.getRegNumber(), stuff.getType().getIntValue(), stuff.getYear());
+		return result!=null;
 	}
 
 	public List<StuffFlow> getStuffHistory(Long stuffID) {
@@ -45,22 +55,33 @@ public class DBService {
 		}
 		return null;
 	}
-	
-	public User getCurrentUser() throws StuffBusinessException {
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		UserDetailsImpl userDet = (UserDetailsImpl) auth.getPrincipal();
-		User user = userDet.getUser();
-		if (user == null) {
-			log.error("current user is null");
-			throw new StuffBusinessException();
-		}
-		return user;
+
+	/**
+	 * return current authorized user.
+	 * 
+	 * @return
+	 * @throws StuffBusinessException
+	 */
+	public UserBO getCurrentUser() throws StuffBusinessException {
+		User userEntity = getAuthorizedUser();
+		return DataBuilder.buildUserBo(userEntity);
 	}
-	
-	public void saveFlow(FlowData flowData) {
+
+	private User getAuthorizedUser() throws StuffBusinessException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl userDet = (UserDetailsImpl) auth.getPrincipal();
+		User userEntity = userDet.getUser();
+		if (userEntity == null) {
+			log.error("current user is null");
+			throw new StuffBusinessException("current user is null");
+		}
+		return userEntity;
+	}
+
+	public void saveFlow(FlowBO flow) throws StuffBusinessException {
 		// 1. check user
 		// 2. save stuff
+
 		// 3. save Flow
 		// 4. save currFlow
 	}
