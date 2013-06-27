@@ -1,0 +1,196 @@
+body {
+	margin: 0px;
+}
+
+body, #top {
+	background-color: rgb(230, 245, 255);
+}
+
+div.formBottomWrap {
+	background-color: rgb(210, 235, 250);
+}
+
+menu.mainmenu li {
+	type: 'button';
+	display: inline;
+	background: rgb(175, 230, 140);
+	border-radius: 6px 6px 6px 6px;
+	padding: 10px;
+	border-width: 0px;
+	border-bottom-width: 4px;
+	border-style: solid;
+	border-bottom-color: rgb(45, 130, 0);
+}
+
+menu.mainmenu a {
+	color: rgb(45, 130, 0);
+	font-size: 20px;
+	/* font-family: Georgia, "Times New Roman", Times, serif; */
+}
+#header {
+	background-color: rgb(80, 170, 240);
+	height: 75px;
+	color: white;
+	padding-top: 10px;
+}
+
+#header h2{
+	padding-left: 15px;
+	float: left;
+}
+
+a.homeUrl {
+	padding-top: 13px;
+	padding-left: 10px;
+	float: left;
+}
+
+a.logoutUrl {
+	padding-top: 23px;
+	padding-right: 1px;
+	float: right;
+	color: white;
+}
+
+label.userFullName {
+	padding-top: 23px;
+	padding-right: 10px;
+	float: right;
+	color: white;
+}
+
+#top {
+	padding-left: 50px;
+}
+
+div.formMainWrap {
+	margin-top: 20px;
+	clear:both;
+	background-color: rgb(240, 250, 255);
+	display: inline-block;
+	float:left;
+	padding: 10px;
+	color: rgb(15, 30, 140);
+}
+
+div.formMainWrap_hidden {
+	margin-top: 20px;
+	clear:both;
+	background-color: rgb(240, 250, 255);
+	display: none;
+	float:left;
+	padding: 10px;
+	color: rgb(15, 30, 140);
+}
+
+div.ButtonPanel {
+    display: inline-block;
+    float: right;
+    margin-top: 4px;
+}
+
+h4 {
+	margin: 0px;
+}
+
+div.formBottomWrap {
+	display: inline-block;
+	float:left;
+	padding: 10px;
+	/* border-width: 1px;
+	border-style: solid;
+	border-color: rgb(80, 170, 240); */
+}
+
+div.formBottomWrap_hidden {
+	display: none;
+	float:left;
+	padding: 10px;
+	/* border-width: 1px;
+	border-style: solid;
+	border-color: rgb(80, 170, 240); */
+}
+
+div.noResultDiv {
+	width: 400px;
+	margin: auto;
+	height: 30px;
+}
+
+div.noResultDiv_hidden {
+	display: none;
+	width: 400px;
+	margin: auto;
+	height: 30px;
+}
+
+div.formBottomWrap table, div.formBottomWrap td, div.formBottomWrap th {
+	border-width: 0px;
+}
+
+div.formBottomWrap td {
+	padding: 0px 0px 0px 10px;
+}
+
+div.formBottomWrap th {
+	background-color: rgb(80, 170, 240);
+	color: white;
+	padding: 5px 10px 5px 10px;
+}
+	
+td.tdLabel {
+	width: 100px;
+	text-align: right;
+	padding-right: 16px;
+}
+
+td.tdSubmit {
+	padding-top: 16px;
+}
+ 
+tr.selRow {
+	background-color: rgb(80, 170, 240);
+}
+
+/* Hide column with class hiddencol */
+table .hiddencol {
+	display: none;
+}
+
+table.entityTable tr:hover {
+    background-color: rgb(150, 200, 245);
+}
+
+input.textinp {
+	width: 200px;
+}
+
+input.textinpSmall {
+	width: 100px;
+}
+
+label.standardLbl {
+	width: 200px;
+}
+
+/* Stuff Number State*/
+td.stuffState1 {
+	background-color: rgb(40, 180, 50);
+}
+
+td.stuffState2 {
+	background-color: rgb(140, 250, 150);
+}
+
+td.stuffState3 {
+	background-color: rgb(230, 240, 100);
+}
+
+td.stuffState4 {
+	background-color: rgb(240, 50, 50);
+}
+
+td.stuffState5 {
+	background-color: rgb(240, 150, 50);
+}
+

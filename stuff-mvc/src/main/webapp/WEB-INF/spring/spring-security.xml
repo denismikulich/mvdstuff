@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/security 
+			http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/main/**" access="ROLE_USER, ROLE_ADMIN, ROLE_GUEST" />
+		<security:form-login 
+			login-page="/login"
+			default-target-url="/main/main"
+			authentication-failure-url="/login?error=true" />
+		<security:logout logout-success-url="/login"/>
+	</security:http>
+
+	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+    <bean class="com.stuff.stuffapp.loginservice.LoginServiceImpl" id="myUserDetailsService" />
+
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref='myUserDetailsService'/>
+	</security:authentication-manager>
+
+</beans>  
