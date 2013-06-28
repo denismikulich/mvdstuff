@@ -1,38 +1,34 @@
 package com.stuff.stuffapp.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
-import com.stuff.stuffapp.dao.StuffDao;
-import com.stuff.stuffapp.dao.StuffFlowDao;
 import com.stuff.stuffapp.data.StuffType;
-import com.stuff.stuffapp.domain.Stuff;
-import com.stuff.stuffapp.domain.StuffFlow;
-import com.stuff.stuffapp.domain.User;
 import com.stuff.stuffapp.formbean.PrepareStuffsFormBean;
-import com.stuff.stuffapp.formbean.StuffNumberBean;
-import com.stuff.stuffapp.loginservice.UserDetailsImpl;
+import com.stuff.stuffapp.formbean.StuffStateFormBean;
+import com.stuff.stuffapp.service.DBService;
 
 @Component
 public class PrepareSendStuffModel {
 
+	@Autowired
+	private DBService dbService;
+	
 	private PrepareStuffsFormBean prepareBean;
 	private PreparedStuffCollection preparedStuffs;
 
-	@Autowired
-	private StuffDao stuffDao;
-
-	@Autowired
-	private StuffFlowDao stuffFlowDao;
-
 	public PrepareSendStuffModel() {
-		preparedStuffs = new PreparedStuffCollection();
+	}
+	
+	@PostConstruct
+	private void init() {
+		preparedStuffs = new PreparedStuffCollection(dbService);
 		resetData();
 	}
 
@@ -55,23 +51,27 @@ public class PrepareSendStuffModel {
 		this.prepareBean = prepareBean;
 	}
 
-	public void submitData() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		UserDetailsImpl userDet = (UserDetailsImpl) auth.getPrincipal();
-		User user = userDet.getUser();
-		/*for (Stuff stuff : stuffList) {
-			stuff = stuffDao.saveStuff(stuff);
+	/**
+	 * Return List of the form beans which contain state info about stuffs.
+	 * 
+	 * @return List<StuffStateFormBean>
+	 */
+	public List<StuffStateFormBean> getStates() {
+		return preparedStuffs.buildFormBean();
+	}
 
-			StuffFlow flow = new StuffFlow();
-			flow.setSender(prepareBean.getSender());
-			flow.setReciever(prepareBean.getReciever());
-			flow.setStuff(stuff);
-			flow.setSendNumber(prepareBean.getSendNumber());
-			flow.setSendDate(prepareBean.getSendDate());
-			flow.setSign(prepareBean.getSign());
-			flow.setUser(user);
-			stuffFlowDao.saveFlow(flow);
-		}*/
+	public void submitData() {
+		/*
+		 * for (Stuff stuff : stuffList) { stuff = stuffDao.saveStuff(stuff);
+		 * 
+		 * StuffFlow flow = new StuffFlow();
+		 * flow.setSender(prepareBean.getSender());
+		 * flow.setReciever(prepareBean.getReciever()); flow.setStuff(stuff);
+		 * flow.setSendNumber(prepareBean.getSendNumber());
+		 * flow.setSendDate(prepareBean.getSendDate());
+		 * flow.setSign(prepareBean.getSign()); flow.setUser(user);
+		 * stuffFlowDao.saveFlow(flow); }
+		 */
 
 	}
 

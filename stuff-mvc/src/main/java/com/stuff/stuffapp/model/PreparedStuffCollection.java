@@ -1,47 +1,44 @@
 package com.stuff.stuffapp.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 import com.stuff.stuffapp.data.StuffBO;
 import com.stuff.stuffapp.data.StuffState;
 import com.stuff.stuffapp.data.StuffType;
-import com.stuff.stuffapp.domain.Stuff;
-import com.stuff.stuffapp.formbean.StuffNumberBean;
+import com.stuff.stuffapp.formbean.StuffStateFormBean;
 import com.stuff.stuffapp.service.DBService;
 
 public class PreparedStuffCollection {
 
-	Map<StuffBO, StuffState> stuffs;
-	
-	@Autowired
+	List<StuffAndStateContainer> mapper;
 	DBService dbService;
 
-	public PreparedStuffCollection() {
-		stuffs = new HashMap<StuffBO, StuffState>();
+	public PreparedStuffCollection(DBService dbService) {
+		this.dbService = dbService;
+		mapper = new ArrayList<StuffAndStateContainer>();
 	}
-	
+
 	public void clear() {
-		stuffs.clear();
+		mapper.clear();
 	}
-	
+
 	/**
-	 * Split numbers comma list and put it into the state map.
-	 * Check stuff state with DB.
+	 * Split numbers comma list and put it into the state map. Check stuff state
+	 * with DB.
 	 * 
-	 * @param numbersCommaList Numbers comma list.
-	 * @param type Stuff type.
-	 * @param year Stuff year.
+	 * @param numbersCommaList
+	 *            Numbers comma list.
+	 * @param type
+	 *            Stuff type.
+	 * @param year
+	 *            Stuff year.
 	 */
 	public void processData(String numbersCommaList, StuffType type, int year) {
 		if (numbersCommaList == null)
 			return;
 		String[] numbersArray = numbersCommaList.split("[ .,]");
-		stuffs.clear();
+		mapper.clear();
 		for (String regNumber : numbersArray) {
 			regNumber = regNumber.trim();
 			if (!regNumber.isEmpty()) {
@@ -49,43 +46,65 @@ public class PreparedStuffCollection {
 				stuff.setRegNumber(regNumber);
 				stuff.setType(type);
 				stuff.setYear(year);
-				stuffs.put(stuff, StuffState.UNCHECKED);
+				mapper.add(new StuffAndStateContainer(stuff, StuffState.UNCHECKED));
 			}
 		}
 		checkStuffsState();
 	}
-	
+
 	private void checkStuffsState() {
-		Set<StuffBO> keys = stuffs.keySet();
-		
-		for (StuffBO stuff : keys) {
-			stuffs.remove(stuff); // remove item from collection.
-			if (!dbService.isStuffExist(stuff)) { // not created entity.
-				StuffState state = null;
+
+		for (StuffAndStateContainer sNs : mapper) {
+			if (!dbService.isStuffExist(sNs.stuff)) { // not created entity.
+				sNs.state = StuffState.NOT_CREATED;
 				try {
-					Integer.parseInt(stuff.getRegNumber());
-				} catch(NumberFormatException ex) {
-					state = StuffState.CONTAIN_SIMBOLS; // state not created and regNumber contain symbols.
+					Integer.parseInt(sNs.stuff.getRegNumber());
+				} catch (NumberFormatException ex) {
+					sNs.state = StuffState.CONTAIN_SIMBOLS; // state not created
+															// and regNumber
+															// contain symbols.
 				}
-				if (state == null) {
-					state = StuffState.NOT_CREATED;
-				}
-				stuffs.put(stuff, state); // put new value.
 			} else { // stuff is exist
 				// TODO:
 				// boolean bWrongPlace = isWrongPlace(Stuff stuff);
-				stuffs.put(stuff, StuffState.OK);
+				sNs.state = StuffState.OK;
 			}
-			
-			/*if (isRepeat(stuffNumberBean)) {
-				stuffNumberBean.setState(5);
-			}
-			stuffList.add(stuffEntity);*/
+			checkRepeat(sNs);
 		}
 	}
-	
-	private boolean isRepeat(StuffNumberBean bean) {
-		
+
+	private boolean checkRepeat(StuffAndStateContainer checked) {
+		for (StuffAndStateContainer sNs : mapper) {
+			if (sNs != checked && sNs.stuff.equals(checked.stuff)) {
+				checked.state = StuffState.REPEAT;
+			}
+		}
 		return false;
+	}
+
+	public List<StuffStateFormBean> buildFormBean() {
+		List<StuffStateFormBean> resultList = new ArrayList<StuffStateFormBean>();
+		for (StuffAndStateContainer sNs : mapper) {
+			StuffStateFormBean bean = new StuffStateFormBean(sNs.stuff.getRegNumber(),
+					sNs.state.ordinal());
+			resultList.add(bean);
+		}
+		return resultList;
+	}
+
+	/**
+	 * Stuff and it state container.
+	 * 
+	 * @author Home
+	 * 
+	 */
+	private class StuffAndStateContainer {
+		public StuffBO stuff;
+		public StuffState state;
+
+		public StuffAndStateContainer(StuffBO stuff, StuffState state) {
+			this.stuff = stuff;
+			this.state = state;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.stuff.stuffapp.formbean;
 
-public class StuffNumberBean {
+public class StuffStateFormBean {
 
 	private String stuffNumber;
 	/**
@@ -12,12 +12,12 @@ public class StuffNumberBean {
 	 */
 	private int state;
 
-	public StuffNumberBean(String stuffNumber) {
+	public StuffStateFormBean(String stuffNumber) {
 		this.stuffNumber = stuffNumber;
 		this.state = 1;
 	}
 
-	public StuffNumberBean(String stuffNumber, int state) {
+	public StuffStateFormBean(String stuffNumber, int state) {
 		if (state > 5 || state < 1) {
 			throw new IllegalArgumentException(
 					"Illegal Stuff state value. Must be from 1 to 5.");

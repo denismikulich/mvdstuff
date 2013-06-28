@@ -72,7 +72,7 @@ public class PrepareSendStuffController extends BaseController {
 	public ModelAndView handleSubmitSending() {
 		ModelAndView model = new ModelAndView("submitsending");
 		model.addObject("sendBean", pageModel.getPrepareBean());
-		model.addObject("stuffNumbers", null);
+		model.addObject("stuffNumbers", pageModel.getStates());
 		return super.baseHandle(model);
 	}
 	
