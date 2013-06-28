@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.stuff.stuffapp.data.StuffBO;
 import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.formbean.StuffSearchCriteria;
 import com.stuff.stuffapp.service.DBService;
@@ -35,9 +36,11 @@ public class SimpleSearchController extends BaseController {
 
 	@RequestMapping(value = "/main/processSimpleSearch", method = RequestMethod.POST)
 	public ModelAndView ProcessPOST(@ModelAttribute("criteria") StuffSearchCriteria bean) {
-		Stuff stuff = dbService.getStuff(bean);
+		StuffBO stuff = dbService.getStuff(bean);
 		if (stuff != null) {
-			ModelAndView model = new ModelAndView("redirect:/main/stuff?id=" + stuff.getId());
+			ModelAndView model = new ModelAndView("redirect:/main/stuff?stuff=" + stuff.getRegNumber()+
+													"&type="+stuff.getType().getIntValue()+
+													"&year="+stuff.getYear());
 			return model;
 		} else {
 			return handleSearch(true);

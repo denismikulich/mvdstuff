@@ -174,23 +174,27 @@ label.standardLbl {
 }
 
 /* Stuff Number State*/
-td.stuffState1 {
+td.stuffStateOK {
 	background-color: rgb(40, 180, 50);
 }
 
-td.stuffState2 {
+td.stuffStateWRONG_PLACE {
 	background-color: rgb(140, 250, 150);
 }
 
-td.stuffState3 {
+td.stuffStateNOT_CREATED {
 	background-color: rgb(230, 240, 100);
 }
 
-td.stuffState4 {
+td.stuffStateCONTAIN_SIMBOLS {
 	background-color: rgb(240, 50, 50);
 }
 
-td.stuffState5 {
+td.stuffStateREPEAT {
+	background-color: rgb(240, 150, 50);
+}
+
+td.stuffStateUNCHECKED {
 	background-color: rgb(240, 150, 50);
 }
 

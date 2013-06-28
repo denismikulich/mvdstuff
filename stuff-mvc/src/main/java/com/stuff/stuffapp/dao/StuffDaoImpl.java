@@ -76,8 +76,7 @@ public class StuffDaoImpl implements StuffDao {
 		Session session = sessionFactory.getCurrentSession();
 		List<Stuff> stuffs = null;
 		try {
-			Query q = session
-					.createQuery("from Stuff where regNumber = :regN and year = :regY");
+			Query q = session.createQuery("from Stuff where regNumber = :regN and year = :regY");
 			q.setString("regN", regNumber);
 			q.setInteger("regY", year);
 			stuffs = q.list();
@@ -98,9 +97,8 @@ public class StuffDaoImpl implements StuffDao {
 		Session session = sessionFactory.getCurrentSession();
 		List<Stuff> stuffs = null;
 		try {
-			Query q = session
-					.createQuery("from Stuff where regNumber = :regN and type = :type " +
-							"and year = :regY");
+			Query q = session.createQuery("from Stuff where regNumber = :regN and type = :type "
+					+ "and year = :regY");
 			q.setString("regN", regNumber);
 			q.setInteger("regY", year);
 			q.setInteger("type", type);

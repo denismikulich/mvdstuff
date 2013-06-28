@@ -1,5 +1,7 @@
 package com.stuff.stuffapp.service;
 
+import java.security.KeyStore.Builder;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -8,12 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.stuff.stuffapp.dao.CurrentFlowDao;
 import com.stuff.stuffapp.dao.StuffDao;
 import com.stuff.stuffapp.dao.StuffFlowDao;
 import com.stuff.stuffapp.data.FlowBO;
 import com.stuff.stuffapp.data.StuffBO;
-import com.stuff.stuffapp.data.StuffType;
 import com.stuff.stuffapp.data.UserBO;
+import com.stuff.stuffapp.domain.CurrentFlow;
 import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.domain.StuffFlow;
 import com.stuff.stuffapp.domain.User;
@@ -28,30 +31,54 @@ public class DBService {
 	StuffDao stuffDao;
 	@Autowired
 	StuffFlowDao flowDao;
+	@Autowired
+	CurrentFlowDao curFlowDao;
+	
 
 	private static Logger log = Logger.getLogger(DBService.class.getName());
 
-	public Stuff getStuff(StuffSearchCriteria criteria) {
-		return getStuff(criteria.getStuffNumber(), criteria.getType(), criteria.getStuffsYear());
+	public StuffBO saveStuff(final StuffBO stuff) {
+		Stuff entity = DataBuilder.buildStuffEntity(stuff);
+		stuffDao.saveStuff(entity);
+		StuffBO result = DataBuilder.buildStuffBo(entity);
+		return result;
+	}
+	
+	public StuffBO getStuff(StuffSearchCriteria criteria) {
+		Stuff entity = getStuff(criteria.getStuffNumber(), criteria.getType(), criteria.getStuffsYear());
+		return DataBuilder.buildStuffBo(entity);
 	}
 
 	private Stuff getStuff(String regNo, int type, int year) {
 		return stuffDao.findStuff(regNo, type, year);
 	}
 	
+	private Stuff getStuff(StuffBO bo) {
+		return getStuff(bo.getRegNumber(), bo.getType().getIntValue(), bo.getYear());
+	}
+
 	public Boolean isStuffExist(StuffBO stuff) {
-		Stuff result = stuffDao.findStuff(stuff.getRegNumber(), stuff.getType().getIntValue(), stuff.getYear());
-		return result!=null;
+		Stuff result = getStuff(stuff);
+		return result != null;
+	}
+	
+	public List<FlowBO> getStuffHistory(StuffBO stuff) {
+		Stuff stuffEntity = getStuff(stuff);
+		if (stuffEntity == null) {
+			return null;
+		}
+		List<StuffFlow> history = flowDao.getStuffHistory(stuffEntity.getId());
+		List<FlowBO> historyBo = new ArrayList<FlowBO>();
+		for (StuffFlow entity : history) {
+			historyBo.add( DataBuilder.buildFlowBo(entity));
+		}
+		return historyBo;
 	}
 
-	public List<StuffFlow> getStuffHistory(Long stuffID) {
-		return flowDao.getStuffHistory(stuffID);
-	}
-
-	public List<StuffFlow> getStuffHistory(StuffSearchCriteria criteria) {
-		Stuff stuff = getStuff(criteria);
+	public List<FlowBO> getStuffHistory(StuffSearchCriteria criteria) {
+		StuffBO stuff = getStuff(criteria);
 		if (stuff != null) {
-			return getStuffHistory(stuff.getId());
+			return getStuffHistory(stuff);
 		}
 		return null;
 	}
@@ -80,10 +107,30 @@ public class DBService {
 
 	public void saveFlow(FlowBO flow) throws StuffBusinessException {
 		// 1. check user
+		User userEntity = this.getAuthorizedUser();
 		// 2. save stuff
-
+		Stuff stuffEntity = getStuff(flow.getStuff().getRegNumber(), flow.getStuff().getType()
+				.getIntValue(), flow.getStuff().getYear());
+		if (stuffEntity == null) {
+			stuffEntity = stuffDao.saveStuff(DataBuilder.buildStuffEntity(flow.getStuff()));
+		}
 		// 3. save Flow
+		StuffFlow flowEntity = DataBuilder.buildFlowEntity(flow);
+		flowEntity.setStuff(stuffEntity);
+		flowEntity.setUser(userEntity);
+		flowDao.saveFlow(flowEntity);
+		
 		// 4. save currFlow
+		CurrentFlow curFlow = new CurrentFlow();
+		curFlow.setFlow(flowEntity);
+		curFlow.setStuff(stuffEntity);
+		curFlowDao.save(curFlow);
+	}
+
+	public FlowBO getLastFlow(StuffBO stuff) {
+		Stuff stuffEntity = getStuff(stuff);
+		StuffFlow flowEnitiy = curFlowDao.getFlowByStuff(stuffEntity);
+		return DataBuilder.buildFlowBo(flowEnitiy);
 	}
 
 }

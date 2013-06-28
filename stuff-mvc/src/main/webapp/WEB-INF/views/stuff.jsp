@@ -21,8 +21,8 @@
 		<div class="formBottomWrap"  style="width: 800px;">
 			<table id="searchResultTable" class="entityTable" border="1">
 				<tr>
-					<th class="hiddencol">ID</th>
 					<th>Stuff number</th>
+					<th>Type</th>
 					<th>Year</th>
 					<th>Receiver</th>
 					<th>Sender</th>
@@ -33,16 +33,16 @@
 					<th>Description</th>
 				</tr>
 				<c:forEach items="${stuffFlows}" var="flow" varStatus="i">
-					<tr id="row_${flow.flowId}" class="" onclick='selectRow(${flow.flowId})'>
-						<td class="hiddencol">${flow.flowId}</td>
+					<tr>
 						<td>${flow.stuff.regNumber}</td>
+						<td>${flow.stuff.type}</td>
 						<td>${flow.stuff.year}</td>
-						<td>${flow.reciever}</td>
+						<td>${flow.recipient}</td>
 						<td>${flow.sender}</td>
-						<td>${flow.sendNumber}</td>
-						<td>${flow.sendDate}</td>
-						<td>${flow.sign}</td>
-						<td>${flow.user.lastname}</td>
+						<td>${flow.outgoingNo}</td>
+						<td>${flow.outgoingDate}</td>
+						<td>${flow.signature}</td>
+						<td>${flow.user.fullName}</td>
 						<td>${flow.description}</td>
 					</tr>
 				</c:forEach>

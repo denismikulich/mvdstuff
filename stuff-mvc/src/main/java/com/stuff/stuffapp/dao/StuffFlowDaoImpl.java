@@ -44,16 +44,18 @@ t.commit();
 
 	@Override
 	@Transactional
-	public List<StuffFlow> findFlowsByStuff(String name, Integer year) {
+	public List<StuffFlow> findFlowsByStuff(String name, Integer type, Integer year) {
 		Session session = sessionFactory.getCurrentSession();
 		
 		List<StuffFlow> result = null;
 		try {
 			Query q = session
-				.createQuery("from StuffFlow where stuff.regNumber = :stuffN and stuff.year = :stuffsYear"+
+				.createQuery("from StuffFlow where stuff.regNumber = :stuffN and " +
+						"stuff.year = :stuffYear and stuff.type = :stuffType"+
 						" ORDER BY sendDate DESC, flowId DESC");
 			q.setString("stuffN", name);
-			q.setInteger("stuffsYear", year);
+			q.setInteger("stuffType", type);
+			q.setInteger("stuffYear", year);
 			result = q.list();
 			session.flush();
 		} catch (HibernateException e) {

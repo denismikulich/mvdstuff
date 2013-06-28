@@ -62,8 +62,8 @@ public class LoginServiceImpl implements UserDetailsService {
 		}
 		initDefaultAdmin();
 		// TODO: remove next 2 rows. 
-		defaultInitUsers();
-		defaultInitStuffFlow();
+		/*defaultInitUsers();
+		defaultInitStuffFlow();*/
 	}
 	
 	private void initDefaultAdmin() {

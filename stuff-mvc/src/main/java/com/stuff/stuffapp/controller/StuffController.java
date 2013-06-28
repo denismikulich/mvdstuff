@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.stuff.stuffapp.dao.StuffFlowDao;
+import com.stuff.stuffapp.data.FlowBO;
+import com.stuff.stuffapp.data.StuffBO;
+import com.stuff.stuffapp.data.StuffType;
 import com.stuff.stuffapp.domain.StuffFlow;
 import com.stuff.stuffapp.formbean.StuffSearchCriteria;
 import com.stuff.stuffapp.service.DBService;
@@ -28,7 +31,7 @@ public class StuffController extends BaseController {
 
 	@Override
 	public String getPageHeaderHtml() {
-		return "Stuff Page";
+		return "stuff.header.text";
 	}
 
 	/**
@@ -40,21 +43,16 @@ public class StuffController extends BaseController {
 	 */
 	@RequestMapping(value = "/main/stuff", method = RequestMethod.GET)
 	public ModelAndView handleMain(
-			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "stuff", required = false) String stuff,
 			@RequestParam(value = "type", required = false) Integer type,
 			@RequestParam(value = "year", required = false) Integer year) {
 
-		List<StuffFlow> stuffFlows = null;
-		if (id != null) {
-			stuffFlows = dbService.getStuffHistory(id);
-		} else {
-			StuffSearchCriteria criteria = new StuffSearchCriteria();
-			criteria.setStuffNumber(stuff);
-			criteria.setType(type);
-			criteria.setStuffsYear(year);
-			stuffFlows = dbService.getStuffHistory(criteria);
-		}
+		List<FlowBO> stuffFlows = null;
+		StuffBO bo = new StuffBO();
+		bo.setRegNumber(stuff);
+		bo.setType(StuffType.valueOf(type));
+		bo.setYear(year);
+		stuffFlows = dbService.getStuffHistory(bo);
 
 		ModelAndView model = new ModelAndView("stuff");
 		model.addObject("stuffFlows", stuffFlows);

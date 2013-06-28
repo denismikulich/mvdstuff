@@ -11,7 +11,7 @@ public interface StuffFlowDao {
 
 	public StuffFlow retriveFlow(Long id);
 
-	public List<StuffFlow> findFlowsByStuff(String name, Integer year);
+	public List<StuffFlow> findFlowsByStuff(String name, Integer type, Integer year);
 	
 	public List<StuffFlow> searchFlows(SearchCriteriaBean criteria);
 	

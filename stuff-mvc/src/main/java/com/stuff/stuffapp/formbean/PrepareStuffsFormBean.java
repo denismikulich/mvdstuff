@@ -12,6 +12,7 @@ public class PrepareStuffsFormBean {
 	private String sendNumber;
 	private Date sendDate;
 	private String sign;
+	private String description;
 
 	public String getSender() {
 		return sender;
@@ -76,5 +77,13 @@ public class PrepareStuffsFormBean {
 	public void setStuffsType(int stuffsType) {
 		this.stuffsType = stuffsType;
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 }
