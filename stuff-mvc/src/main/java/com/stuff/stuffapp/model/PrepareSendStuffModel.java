@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.stuff.stuffapp.data.StuffType;
 import com.stuff.stuffapp.formbean.PrepareStuffsFormBean;
 import com.stuff.stuffapp.formbean.StuffStateFormBean;
 import com.stuff.stuffapp.service.DBService;
@@ -61,6 +60,7 @@ public class PrepareSendStuffModel {
 
 	public void submitData() {
 		preparedStuffs.save(prepareBean);
+
 	}
 
 }

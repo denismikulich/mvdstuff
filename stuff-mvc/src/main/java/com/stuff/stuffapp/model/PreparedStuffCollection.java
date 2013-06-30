@@ -78,9 +78,8 @@ public class PreparedStuffCollection {
 			} else { // stuff is exist
 				if (isWrongPlace(sNs.stuff, sender)) {
 					sNs.state = StuffState.WRONG_PLACE;
-				} else {
-					sNs.state = StuffState.OK;
 				}
+				sNs.state = StuffState.OK;
 			}
 			checkRepeat(sNs);
 		}
