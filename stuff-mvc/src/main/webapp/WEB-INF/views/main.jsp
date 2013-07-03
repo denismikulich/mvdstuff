@@ -19,11 +19,11 @@
 	
 	<div id='mainmenu-container'>
 		<menu class="mainmenu1" dir="ltr">
-			<li><a href="../main/sendstuff"> <strong>Send stuff</strong></a></li>
+			<li><a href="../main/sendstuff"> <strong><spring:message code="sendstuffpage.header.text"/></strong></a></li>
 			<li><a href="../main/search"> <strong>search</strong></a></li>
-			<li><a href="../main/simpleSearch"> <strong>Simple Search</strong></a></li>
+			<li><a href="../main/simpleSearch"> <strong><spring:message code="simplesearch.header.text"/></strong></a></li>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<li><a href="../admin/admin"><strong>Admin tools</strong></a></li>
+				<li><a href="../admin/admin"><strong><spring:message code="adminpage.header.text"/></strong></a></li>
 			</sec:authorize>
 		</menu>
 	</div>

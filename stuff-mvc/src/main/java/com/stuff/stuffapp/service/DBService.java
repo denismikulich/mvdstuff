@@ -1,6 +1,5 @@
 package com.stuff.stuffapp.service;
 
-import java.security.KeyStore.Builder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +62,11 @@ public class DBService {
 		return result != null;
 	}
 	
+	/**
+	 * get stuff history.
+	 * @param stuff filled StuffBO
+	 * @return HistoryBO stuff history
+	 */
 	public HistoryBO getHistory(StuffBO stuff) {
 		if (stuff == null) {
 			return null;
@@ -84,27 +88,6 @@ public class DBService {
 		return history;
 	}
 	
-	public List<FlowBO> getStuffHistory(StuffBO stuff) {
-		Stuff stuffEntity = getStuff(stuff);
-		if (stuffEntity == null) {
-			return null;
-		}
-		List<StuffFlow> history = flowDao.getStuffHistory(stuffEntity.getId());
-		List<FlowBO> historyBo = new ArrayList<FlowBO>();
-		for (StuffFlow entity : history) {
-			historyBo.add( DataBuilder.buildFlowBo(entity));
-		}
-		return historyBo;
-	}
-
-	public List<FlowBO> getStuffHistory(StuffSearchCriteria criteria) {
-		StuffBO stuff = getStuff(criteria);
-		if (stuff != null) {
-			return getStuffHistory(stuff);
-		}
-		return null;
-	}
-
 	/**
 	 * return current authorized user.
 	 * 
@@ -127,6 +110,11 @@ public class DBService {
 		return userEntity;
 	}
 
+	/**
+	 * Save flow.
+	 * @param flow
+	 * @throws StuffBusinessException
+	 */
 	public void saveFlow(FlowBO flow) throws StuffBusinessException {
 		// 1. check user
 		User userEntity = this.getAuthorizedUser();

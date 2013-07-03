@@ -39,7 +39,7 @@
 
 	<div id="top">
 		<div class="formMainWrap" style="width: 570px;">
-			<h4>Search criteria</h4>
+			<h4><spring:message code="simplesearchpage.searchcriteria"/></h4>
 			<form:form name="searchForm" commandName="criteria" method="post"
 				action="processSimpleSearch">
 				<div id="simpleSearchDiv" class="formBottomWrap"

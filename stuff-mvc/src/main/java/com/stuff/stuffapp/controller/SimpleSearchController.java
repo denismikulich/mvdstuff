@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.stuff.stuffapp.data.StuffBO;
-import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.formbean.StuffSearchCriteria;
 import com.stuff.stuffapp.service.DBService;
 
@@ -22,25 +21,32 @@ public class SimpleSearchController extends BaseController {
 	private DBService dbService;
 
 	@RequestMapping(value = "/main/simpleSearch", method = RequestMethod.GET)
-	public ModelAndView handleSearch(@RequestParam(value = "noresult", required = false) Boolean showNoResults) {
+	public ModelAndView handleSearch(
+			@RequestParam(value = "noresult", required = false) Boolean showNoResults) {
 		ModelAndView model = new ModelAndView("simplesearch");
 		model.addObject("showNoResult", showNoResults);
 		searchCriteria = new StuffSearchCriteria(); // clear search data.
 		return commonSearchHandle(model);
 	}
 
+	/**
+	 * User refresh page after submit searching.
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/main/processSimpleSearch", method = RequestMethod.GET)
 	public ModelAndView ProcessGET() {
-		return handleSearch(false);
+		ModelAndView model = new ModelAndView("redirect:/main/simpleSearch");
+		return model;
 	}
 
 	@RequestMapping(value = "/main/processSimpleSearch", method = RequestMethod.POST)
 	public ModelAndView ProcessPOST(@ModelAttribute("criteria") StuffSearchCriteria bean) {
 		StuffBO stuff = dbService.getStuff(bean);
 		if (stuff != null) {
-			ModelAndView model = new ModelAndView("redirect:/main/stuff?stuff=" + stuff.getRegNumber()+
-													"&type="+stuff.getType().getIntValue()+
-													"&year="+stuff.getYear());
+			ModelAndView model = new ModelAndView("redirect:/main/stuff?stuff="
+					+ stuff.getRegNumber() + "&type=" + stuff.getType().getIntValue() + "&year="
+					+ stuff.getYear());
 			return model;
 		} else {
 			return handleSearch(true);
