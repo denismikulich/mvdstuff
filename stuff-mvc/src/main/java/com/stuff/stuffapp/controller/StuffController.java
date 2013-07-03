@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.stuff.stuffapp.dao.StuffFlowDao;
 import com.stuff.stuffapp.data.FlowBO;
+import com.stuff.stuffapp.data.HistoryBO;
 import com.stuff.stuffapp.data.StuffBO;
 import com.stuff.stuffapp.data.StuffType;
 import com.stuff.stuffapp.domain.StuffFlow;
@@ -43,19 +44,18 @@ public class StuffController extends BaseController {
 	 */
 	@RequestMapping(value = "/main/stuff", method = RequestMethod.GET)
 	public ModelAndView handleMain(
-			@RequestParam(value = "stuff", required = false) String stuff,
-			@RequestParam(value = "type", required = false) Integer type,
-			@RequestParam(value = "year", required = false) Integer year) {
+			@RequestParam(value = "stuff", required = true) String stuff,
+			@RequestParam(value = "type", required = true) Integer type,
+			@RequestParam(value = "year", required = true) Integer year) {
 
-		List<FlowBO> stuffFlows = null;
 		StuffBO bo = new StuffBO();
 		bo.setRegNumber(stuff);
 		bo.setType(StuffType.valueOf(type));
 		bo.setYear(year);
-		stuffFlows = dbService.getStuffHistory(bo);
+		HistoryBO history = dbService.getHistory(bo);
 
 		ModelAndView model = new ModelAndView("stuff");
-		model.addObject("stuffFlows", stuffFlows);
+		model.addObject("history", history);
 
 		return super.baseHandle(model);
 	}

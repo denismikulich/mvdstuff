@@ -11,4 +11,6 @@ public interface CurrentFlowDao {
 	public CurrentFlow retrive(Long id);
 	
 	public StuffFlow getFlowByStuff(Stuff stuff);
+
+	public CurrentFlow getCurFlowByStuff(Stuff stuff);
 }

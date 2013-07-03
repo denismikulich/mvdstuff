@@ -14,6 +14,7 @@ import com.stuff.stuffapp.dao.CurrentFlowDao;
 import com.stuff.stuffapp.dao.StuffDao;
 import com.stuff.stuffapp.dao.StuffFlowDao;
 import com.stuff.stuffapp.data.FlowBO;
+import com.stuff.stuffapp.data.HistoryBO;
 import com.stuff.stuffapp.data.StuffBO;
 import com.stuff.stuffapp.data.UserBO;
 import com.stuff.stuffapp.domain.CurrentFlow;
@@ -60,6 +61,27 @@ public class DBService {
 	public Boolean isStuffExist(StuffBO stuff) {
 		Stuff result = getStuff(stuff);
 		return result != null;
+	}
+	
+	public HistoryBO getHistory(StuffBO stuff) {
+		if (stuff == null) {
+			return null;
+		}
+		Stuff stuffEntity = getStuff(stuff);
+		if (stuffEntity == null) {
+			return null;
+		}
+		List<StuffFlow> flowEnitityList = flowDao.getStuffHistory(stuffEntity.getId());
+		StuffFlow curFlowEntity = curFlowDao.getFlowByStuff(stuffEntity);
+		List<FlowBO> flowBoList = new ArrayList<FlowBO>();
+		for (StuffFlow entity : flowEnitityList) {
+			flowBoList.add(DataBuilder.buildFlowBo(entity));
+		}
+		HistoryBO history = new HistoryBO();
+		history.setHistory(flowBoList);
+		history.setCurrentPlace(DataBuilder.buildFlowBo(curFlowEntity));
+		history.setStuff(stuff);
+		return history;
 	}
 	
 	public List<FlowBO> getStuffHistory(StuffBO stuff) {

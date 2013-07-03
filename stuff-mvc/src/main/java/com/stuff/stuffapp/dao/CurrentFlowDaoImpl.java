@@ -25,6 +25,20 @@ public class CurrentFlowDaoImpl implements CurrentFlowDao {
 
 	@Override
 	public void save(CurrentFlow curFlow) {
+		// 1. find old, compare, update.
+		CurrentFlow find = getCurFlowByStuff(curFlow.getStuff());
+		if (find == null) {
+			saveNewEntity(curFlow);
+		} else {
+			if (find.getFlow().getSendDate().before(curFlow.getFlow().getSendDate())) {
+				delete(find);
+				saveNewEntity(curFlow);
+			}
+		}
+
+	}
+
+	private void saveNewEntity(CurrentFlow curFlow) {
 		try {
 			Session session = sessionFactory.openSession();
 			Transaction t = session.beginTransaction();
@@ -36,10 +50,49 @@ public class CurrentFlowDaoImpl implements CurrentFlowDao {
 			log.error("error save current_flow", exc);
 		}
 	}
+	
+	private void delete(CurrentFlow flow) {
+		try {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			session.delete(flow);
+			session.flush();
+			t.commit();
+			session.close();
+		} catch (HibernateException exc) {
+			log.error("error delete current_flow", exc);
+		}
+	}
 
 	@Override
 	public CurrentFlow retrive(Long id) {
 		throw new RuntimeException("Not implemented yet.");
+	}
+
+	@Override
+	public CurrentFlow getCurFlowByStuff(Stuff stuff) {
+		if (stuff == null) {
+			return null;
+		}
+
+		Session session = sessionFactory.getCurrentSession();
+		List<CurrentFlow> listCurFlows = null;
+		try {
+			Query q = session.createQuery("from CurrentFlow where stuff.regNumber = :stuffN and "
+					+ "stuff.year = :stuffsYear and " + "stuff.type = :stuffsType");
+			q.setString("stuffN", stuff.getRegNumber());
+			q.setInteger("stuffsType", stuff.getType());
+			q.setInteger("stuffsYear", stuff.getYear());
+			listCurFlows = q.list();
+			session.flush();
+		} catch (HibernateException e) {
+			log.error("findFlowsByStuff error", e);
+		}
+		if (listCurFlows == null || listCurFlows.size() != 1) {
+			log.error("Error current flow table data for Stuff ID=" + stuff.getId());
+			return null;
+		}
+		return listCurFlows.get(0);
 	}
 
 	@Override

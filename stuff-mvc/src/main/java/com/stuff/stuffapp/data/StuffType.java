@@ -28,6 +28,19 @@ public enum StuffType {
 		return type;
 	}
 	
+	public String getI18n() {
+		switch (this) {
+		case OTKAZ:
+			return "stufftype.otkaz";
+		case PRIVATE:
+			return "stufftype.private";
+		case ADMINISTRATIVE:
+			return "stufftype.administr";
+		default:
+			return super.toString();
+	}
+	}
+	
 	public static StuffType valueOf(int code) {
 		for (StuffType stuffType : StuffType.values()) {
 			if (stuffType.getIntValue() == code) {

@@ -17,26 +17,50 @@
 	<%@include file="header.jsp" %>
 	
 	<div class="formMainWrap">
-		<h4>Flow list:</h4>
+		<h4><spring:message code="common.stuffnumber"/>: ${history.stuff.regNumber}</h4>
+		<h4><spring:message code="common.stufftype"/>: <spring:message code="${history.stuff.type.i18n}" /></h4>
+		<h4><spring:message code="common.year"/>: ${history.stuff.year}</h4>
+		<h4>&nbsp</h4>
+		<h4><spring:message code="stuffpage.currentplace"/>:</h4>
 		<div class="formBottomWrap"  style="width: 800px;">
 			<table id="searchResultTable" class="entityTable" border="1">
 				<tr>
-					<th>Stuff number</th>
-					<th>Type</th>
-					<th>Year</th>
-					<th>Receiver</th>
-					<th>Sender</th>
-					<th>Send number</th>
-					<th>Send date</th>
-					<th>Sign</th>
-					<th>User</th>
-					<th>Description</th>
+					<th><spring:message code="common.tableheader.recipient"/></th>
+					<th><spring:message code="common.tableheader.sender"/></th>
+					<th><spring:message code="common.tableheader.outgoingNo"/></th>
+					<th><spring:message code="common.tableheader.outgoingDate"/></th>
+					<th><spring:message code="common.tableheader.signature"/></th>
+					<th><spring:message code="common.tableheader.user"/></th>
+					<th><spring:message code="common.tableheader.description"/></th>
 				</tr>
-				<c:forEach items="${stuffFlows}" var="flow" varStatus="i">
+				<tr>
+					<td>${history.currentPlace.recipient}</td>
+					<td>${history.currentPlace.sender}</td>
+					<td>${history.currentPlace.outgoingNo}</td>
+					<td>${history.currentPlace.outgoingDate}</td>
+					<td>${history.currentPlace.signature}</td>
+					<td>${history.currentPlace.user.fullName}</td>
+					<td>${history.currentPlace.description}</td>
+				</tr>
+			</table>
+		</div>
+		
+		<h4>&nbsp</h4>
+		
+		<h4><spring:message code="stuffpage.history"/>:</h4>
+		<div class="formBottomWrap"  style="width: 800px;">
+			<table id="searchResultTable" class="entityTable" border="1">
+				<tr>
+					<th><spring:message code="common.tableheader.recipient"/></th>
+					<th><spring:message code="common.tableheader.sender"/></th>
+					<th><spring:message code="common.tableheader.outgoingNo"/></th>
+					<th><spring:message code="common.tableheader.outgoingDate"/></th>
+					<th><spring:message code="common.tableheader.signature"/></th>
+					<th><spring:message code="common.tableheader.user"/></th>
+					<th><spring:message code="common.tableheader.description"/></th>
+				</tr>
+				<c:forEach items="${history.history}" var="flow" varStatus="i">
 					<tr>
-						<td>${flow.stuff.regNumber}</td>
-						<td>${flow.stuff.type}</td>
-						<td>${flow.stuff.year}</td>
 						<td>${flow.recipient}</td>
 						<td>${flow.sender}</td>
 						<td>${flow.outgoingNo}</td>

@@ -175,7 +175,7 @@ t.commit();
 		List<StuffFlow> result = null;
 		try {
 			Query q = session
-				.createQuery("from StuffFlow where stuff.id = :stuffID");
+				.createQuery("from StuffFlow where stuff.id = :stuffID ORDER BY sendDate DESC");
 		
 			q.setLong("stuffID", stuffID);
 			result = q.list();
