@@ -21,6 +21,7 @@ import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.domain.StuffFlow;
 import com.stuff.stuffapp.domain.User;
 import com.stuff.stuffapp.exception.StuffBusinessException;
+import com.stuff.stuffapp.formbean.SearchCriteriaBean;
 import com.stuff.stuffapp.formbean.StuffSearchCriteria;
 import com.stuff.stuffapp.loginservice.UserDetailsImpl;
 
@@ -141,6 +142,15 @@ public class DBService {
 		Stuff stuffEntity = getStuff(stuff);
 		StuffFlow flowEnitiy = curFlowDao.getFlowByStuff(stuffEntity);
 		return DataBuilder.buildFlowBo(flowEnitiy);
+	}
+	
+	public List<FlowBO> advancedSearch(SearchCriteriaBean criteria) {
+		List<StuffFlow> entities = curFlowDao.advancedSearch(criteria);
+		List<FlowBO> result = new ArrayList<FlowBO>();
+		for (StuffFlow stuffFlow : entities) {
+			result.add(DataBuilder.buildFlowBo(stuffFlow));
+		}
+		return result;
 	}
 
 }

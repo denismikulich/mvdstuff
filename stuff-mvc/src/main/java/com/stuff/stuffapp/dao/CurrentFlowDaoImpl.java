@@ -1,6 +1,9 @@
 package com.stuff.stuffapp.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.stuff.stuffapp.domain.CurrentFlow;
 import com.stuff.stuffapp.domain.Stuff;
 import com.stuff.stuffapp.domain.StuffFlow;
+import com.stuff.stuffapp.formbean.SearchCriteriaBean;
 
 @Repository
 public class CurrentFlowDaoImpl implements CurrentFlowDao {
@@ -50,7 +54,7 @@ public class CurrentFlowDaoImpl implements CurrentFlowDao {
 			log.error("error save current_flow", exc);
 		}
 	}
-	
+
 	private void delete(CurrentFlow flow) {
 		try {
 			Session session = sessionFactory.openSession();
@@ -119,6 +123,80 @@ public class CurrentFlowDaoImpl implements CurrentFlowDao {
 			return null;
 		}
 		return listCurFlows.get(0).getFlow();
+	}
+
+	@Override
+	public List<StuffFlow> advancedSearch(SearchCriteriaBean criteria) {
+		if (criteria == null) {
+			return null;
+		}
+
+		List<PartQuery> parts = parseCriteria(criteria);
+		StringBuffer strQuery = new StringBuffer();
+		for (int i=0; i<parts.size(); i++) {
+			PartQuery part = parts.get(i);
+			if (i!=0) {
+				strQuery.append(" and ");
+			}
+			strQuery.append(part.query);
+		}
+		
+		Session session = sessionFactory.getCurrentSession();
+		List<CurrentFlow> listCurFlows = null;
+		try {
+			Query q = session.createQuery("from CurrentFlow where "+strQuery.toString());
+			for (PartQuery part : parts) {
+				for (String key : part.parameters.keySet()) {
+					q.setParameter(key, part.parameters.get(key));
+				}
+			}
+			listCurFlows = q.list();
+			session.flush();
+		} catch (HibernateException e) {
+			log.error("findFlowsByStuff error", e);
+		}
+
+		List<StuffFlow> result = new ArrayList<StuffFlow>();
+		for (CurrentFlow currentFlow : listCurFlows) {
+			result.add(currentFlow.getFlow());
+		}
+		return result;
+	}
+	
+	private List<PartQuery> parseCriteria(SearchCriteriaBean criteria) {
+		List<PartQuery> result = new ArrayList<CurrentFlowDaoImpl.PartQuery>();
+		// Receiver.
+		if (criteria.getReciever() != null && !criteria.getReciever().isEmpty()) {
+			PartQuery part = new PartQuery();
+			part.query = "(flow.reciever like :reciever)";
+			part.parameters.put("reciever", "%" + criteria.getReciever() + "%");
+			result.add(part);
+		}
+		// Sender.
+		if (criteria.getSender() != null && !criteria.getSender().isEmpty()) {
+			PartQuery part = new PartQuery();
+			part.query = "(flow.sender like :sender)";
+			part.parameters.put("sender", "%" + criteria.getSender() + "%");
+			result.add(part);
+		}
+		// Send Number.
+		if (criteria.getSendNumber() != null && !criteria.getSendNumber().isEmpty()) {
+			PartQuery part = new PartQuery();
+			part.query = "(flow.sendNumber like :sendNumber)";
+			part.parameters.put("sendNumber", "%" + criteria.getSendNumber() + "%");
+			result.add(part);
+		}		
+		return result;
+	}
+
+	class PartQuery {
+		public String query;
+		public Map<String, Object> parameters;
+
+		public PartQuery() {
+			parameters = new HashMap<String, Object>();
+		}
+
 	}
 
 }

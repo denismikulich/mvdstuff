@@ -22,6 +22,7 @@
 			<li><a href="../main/sendstuff"> <strong><spring:message code="sendstuffpage.header.text"/></strong></a></li>
 			<li><a href="../main/search"> <strong>search</strong></a></li>
 			<li><a href="../main/simpleSearch"> <strong><spring:message code="simplesearch.header.text"/></strong></a></li>
+			<li><a href="../main/advanced"> <strong><spring:message code="searchpage.header.text"/></strong></a></li>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 				<li><a href="../admin/admin"><strong><spring:message code="adminpage.header.text"/></strong></a></li>
 			</sec:authorize>

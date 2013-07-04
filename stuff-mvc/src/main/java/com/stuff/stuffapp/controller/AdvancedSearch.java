@@ -13,47 +13,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.stuff.stuffapp.data.SearchResultData;
 import com.stuff.stuffapp.formbean.SearchCriteriaBean;
-import com.stuff.stuffapp.model.SearchModel;
+import com.stuff.stuffapp.service.DBService;
 
-/**
- * Handles requests for the application Search page.
- */
-
-public class SearchController extends BaseController {
+@Controller
+public class AdvancedSearch extends BaseController {
+	@Autowired
+	DBService dbService;
 
 	@Autowired
-	private SearchModel pageModel;
+	SearchResultData searchResultData;
 	
 	@Override
 	public String getPageHeaderHtml() {
 		return "searchpage.header.text";
 	}
-
-	@RequestMapping(value = "/main/search", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/main/advanced", method = RequestMethod.GET)
 	public ModelAndView handleSearch() {
-		ModelAndView model = new ModelAndView("search");
-		pageModel.clearSearchResult(); // clear search criteria.
-		return commonSearchHandle(model);
-	}
-	
-	private ModelAndView commonSearchHandle(ModelAndView model) {
-		model.addObject("criteria", pageModel.getSearchCriteriaBean());
-		model.addObject("searchResult", pageModel.getSearchResult());
+		ModelAndView model = new ModelAndView("advanced");
+		model.addObject("criteria",new SearchCriteriaBean());
 		return baseHandle(model);
-	}
-	
-	@RequestMapping(value = "/main/processSearch", method = RequestMethod.GET)
-	public ModelAndView processSearchGET() {
-		return handleSearch();
 	}
 	
 	@RequestMapping(value = "/main/processSearch", method = RequestMethod.POST)
 	public ModelAndView processSearchPOST(@ModelAttribute("criteria")SearchCriteriaBean bean) {
-		ModelAndView model = new ModelAndView("search");
-		pageModel.setSearchCriteriaBean(bean);
-		pageModel.processSearch();
-		return commonSearchHandle(model);
+		dbService.advancedSearch(bean);
+		searchResultData.setData(dbService.advancedSearch(bean));
+		ModelAndView model = new ModelAndView("redirect:/main/searchresult");
+		return baseHandle(model);
 	}
 	
 	@InitBinder
@@ -62,4 +51,5 @@ public class SearchController extends BaseController {
 	    binder.registerCustomEditor(Date.class, new CustomDateEditor(
 	            dateFormat, true));
 	}
+
 }
